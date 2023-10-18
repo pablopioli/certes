@@ -94,16 +94,49 @@ namespace Certes
         {
             var endpoint = await this.GetResourceUri(d => d.KeyChange);
             var location = await Account().Location();
-            
+
             var newKey = key ?? KeyFactory.NewKey(defaultKeyType);
+
+            JwsPayload body;
+
+#if NET8_0_OR_GREATER
+            var jwk = AccountKey.JsonWebKey;
+            if (jwk is EcJsonWebKey)
+            {
+                var keyChange = new SerializableObjects.KeyChangeEC
+                {
+                    Account = location,
+                    OldKey = AccountKey.JsonWebKey as EcJsonWebKey
+                };
+
+                var jws = new JwsSigner(newKey);
+                body = jws.Sign(keyChange, url: endpoint);
+            }
+            else if (jwk is RsaJsonWebKey)
+            {
+                var keyChange = new SerializableObjects.KeyChangeRsa
+                {
+                    Account = location,
+                    OldKey = AccountKey.JsonWebKey as RsaJsonWebKey
+                };
+
+                var jws = new JwsSigner(newKey);
+                body = jws.Sign(keyChange, url: endpoint);
+            }
+            else
+            {
+                throw new Exception("JsonWebKey is not serializable");
+            }
+#else
             var keyChange = new
             {
                 account = location,
-                oldKey = AccountKey.JsonWebKey,
+                oldKey = AccountKey.JsonWebKey
             };
 
             var jws = new JwsSigner(newKey);
-            var body = jws.Sign(keyChange, url: endpoint);
+            body = jws.Sign(keyChange, url: endpoint);
+#endif
 
             var resp = await HttpClient.Post<Account>(this, endpoint, body, true);
 

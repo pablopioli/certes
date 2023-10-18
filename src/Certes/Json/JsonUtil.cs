@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿#if !NET8_0_OR_GREATER
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace Certes.Json
@@ -16,7 +17,8 @@ namespace Certes.Json
         {
             var jsonSettings = new JsonSerializerSettings
             {
-                ContractResolver = new DefaultContractResolver {
+                ContractResolver = new DefaultContractResolver
+                {
                     NamingStrategy = new CamelCaseNamingStrategy()
                 },
                 NullValueHandling = NullValueHandling.Ignore,
@@ -27,3 +29,4 @@ namespace Certes.Json
         }
     }
 }
+#endif

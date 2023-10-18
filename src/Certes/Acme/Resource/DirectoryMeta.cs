@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+#if !NET8_0_OR_GREATER
 using Newtonsoft.Json;
+#endif
 
 namespace Certes.Acme.Resource
 {
@@ -16,7 +18,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The terms of service.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("termsOfService")]
+#endif
         public Uri TermsOfService { get; }
 
         /// <summary>
@@ -25,7 +29,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The website.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("website")]
+#endif
         public Uri Website { get; }
 
         /// <summary>
@@ -34,7 +40,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The caa identities.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("caaIdentities")]
+#endif
         public IList<string> CaaIdentities { get; }
 
         /// <summary>
@@ -43,7 +51,9 @@ namespace Certes.Acme.Resource
         /// <value>
         ///   <c>true</c> if external account required; otherwise, <c>false</c>.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("externalAccountRequired")]
+#endif
         public bool? ExternalAccountRequired { get; }
 
         /// <summary>
@@ -61,7 +71,7 @@ namespace Certes.Acme.Resource
         {
             TermsOfService = termsOfService;
             Website = website;
-            CaaIdentities = caaIdentities == null ? 
+            CaaIdentities = caaIdentities == null ?
                 (IList<string>)new string[0] :
                 new ReadOnlyCollection<string>(caaIdentities);
             ExternalAccountRequired = externalAccountRequired;

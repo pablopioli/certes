@@ -8,8 +8,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Certes.Acme.Resource;
+#if !NET8_0_OR_GREATER
 using Certes.Json;
 using Newtonsoft.Json;
+#endif
 using Strings = Certes.Properties.Strings;
 
 namespace Certes.Acme
@@ -34,7 +36,9 @@ namespace Certes.Acme
             new ProductInfoHeaderValue(".NET", Environment.Version.ToString()),
         };
 
+#if !NET8_0_OR_GREATER
         private readonly static JsonSerializerSettings jsonSettings = JsonUtil.CreateSettings();
+#endif
         private readonly static Lazy<HttpClient> SharedHttp = new Lazy<HttpClient>(CreateHttpClient);
         private readonly Lazy<HttpClient> http;
 
@@ -99,7 +103,20 @@ namespace Certes.Acme
         /// <returns></returns>
         public async Task<AcmeHttpResponse<T>> Post<T>(Uri uri, object payload)
         {
-            var payloadJson = JsonConvert.SerializeObject(payload, Formatting.None, jsonSettings);
+#if NET8_0_OR_GREATER
+            string payloadJson;
+
+            if (payload is Jws.JwsPayload)
+            {
+                payloadJson = System.Text.Json.JsonSerializer.Serialize(payload, CertesJsonSerializerContext.Default.JwsPayload);
+            }
+            else
+            {
+                throw new Exception($"Cannot serialize object {payload.GetType()}");
+            }
+#else
+            var payloadJson = JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.None, jsonSettings);
+#endif
             var content = new StringContent(payloadJson, Encoding.UTF8, MimeJoseJson);
             // boulder will reject the request if sending charset=utf-8
             content.Headers.ContentType.CharSet = null;
@@ -133,7 +150,6 @@ namespace Certes.Acme
 
             return nonce;
         }
-
 
         private double ExtractRetryAfterHeaderFromResponse(HttpResponseMessage response)
         {
@@ -198,7 +214,11 @@ namespace Certes.Acme
                 if (IsJsonMedia(response.Content?.Headers.ContentType?.MediaType))
                 {
                     var json = await response.Content.ReadAsStringAsync();
+#if NET8_0_OR_GREATER
+                    resource = (T)System.Text.Json.JsonSerializer.Deserialize(json, typeof(T), CertesJsonSerializerContext.Default);
+#else
                     resource = JsonConvert.DeserializeObject<T>(json);
+#endif
                 }
                 else if (typeof(T) == typeof(string))
                 {
@@ -211,7 +231,11 @@ namespace Certes.Acme
                 if (IsJsonMedia(response.Content?.Headers?.ContentType?.MediaType))
                 {
                     var json = await response.Content.ReadAsStringAsync();
+#if NET8_0_OR_GREATER
+                    error = System.Text.Json.JsonSerializer.Deserialize<AcmeError>(json, CertesJsonSerializerContext.Default.AcmeError);
+#else
                     error = JsonConvert.DeserializeObject<AcmeError>(json);
+#endif
                 }
                 else
                 {

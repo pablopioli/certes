@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿#if !NET8_0_OR_GREATER
+using Newtonsoft.Json;
+#endif
 using System;
 using System.Collections.Generic;
 
@@ -15,7 +17,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The identifier.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("identifier")]
+#endif
         public Identifier Identifier { get; set; }
 
         /// <summary>
@@ -24,7 +28,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The status.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("status")]
+#endif
         public AuthorizationStatus? Status { get; set; }
 
         /// <summary>
@@ -33,7 +39,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The expires.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("expires")]
+#endif
         public DateTimeOffset? Expires { get; set; }
 
         /// <summary>
@@ -42,7 +50,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The scope.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("scope")]
+#endif
         public Uri Scope { get; set; }
 
         /// <summary>
@@ -51,7 +61,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The challenges.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("challenges")]
+#endif
         public IList<Challenge> Challenges { get; set; }
 
         /// <summary>
@@ -60,7 +72,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The flag indicating if this authorization is for wildcard.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("wildcard")]
+#endif
         public bool? Wildcard { get; set; }
 
     }

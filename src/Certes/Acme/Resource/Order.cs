@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NET8_0_OR_GREATER
+using System.Text.Json.Serialization;
+#else
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+#endif
 
 namespace Certes.Acme.Resource
 {
@@ -18,7 +23,9 @@ namespace Certes.Acme.Resource
         /// <remarks>
         /// See <see cref="OrderStatus"/> for possible values.
         /// </remarks>
+#if !NET8_0_OR_GREATER
         [JsonProperty("status")]
+#endif
         public OrderStatus? Status { get; set; }
 
         /// <summary>
@@ -27,7 +34,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The expires.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("expires")]
+#endif
         public DateTimeOffset? Expires { get; set; }
 
         /// <summary>
@@ -44,7 +53,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The not before.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("notBefore")]
+#endif
         public DateTimeOffset? NotBefore { get; set; }
 
         /// <summary>
@@ -53,7 +64,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The not after.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("notAfter")]
+#endif
         public DateTimeOffset? NotAfter { get; set; }
 
         /// <summary>
@@ -65,7 +78,9 @@ namespace Certes.Acme.Resource
         /// <remarks>
         /// TODO: model https://tools.ietf.org/html/rfc7807
         /// </remarks>
+#if !NET8_0_OR_GREATER
         [JsonProperty("error")]
+#endif
         public object Error { get; set; }
 
         /// <summary>
@@ -74,7 +89,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The authorizations.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("authorizations")]
+#endif
         public IList<Uri> Authorizations { get; set; }
 
         /// <summary>
@@ -83,7 +100,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The finalize.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("finalize")]
+#endif
         public Uri Finalize { get; set; }
 
         /// <summary>
@@ -92,7 +111,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The certificate.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("certificate")]
+#endif
         public Uri Certificate { get; set; }
 
         /// <summary>
@@ -107,8 +128,12 @@ namespace Certes.Acme.Resource
             /// <value>
             /// The CSR.
             /// </value>
+#if NET8_0_OR_GREATER
+            public string Csr { get; set; }
+#else
             [JsonProperty("csr")]
             internal string Csr { get; set; }
+#endif
         }
     }
 }

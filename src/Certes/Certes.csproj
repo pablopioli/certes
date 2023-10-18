@@ -2,7 +2,7 @@
   <Import Project="../../misc/certes.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;netstandard2.0;net462;</TargetFrameworks>
+    <TargetFrameworks>net6.0;netstandard2.0;net462;net8.0</TargetFrameworks>
     <Authors>Certes Contributors</Authors>
     <Company />
     <Product>Certes ACME Client</Product>
@@ -15,6 +15,7 @@
     <RepositoryUrl>https://github.com/fszlin/certes</RepositoryUrl>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Certes.xml</DocumentationFile>
     <PackageIcon>logo.png</PackageIcon>
+    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsTrimmable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,8 @@
     <None Remove="Resources\Certificates\dst-root-ca-x3.pem" />
     <None Remove="Resources\Certificates\fake-le-root-x1.pem" />
     <None Remove="Resources\Certificates\isrg-root-x1.pem" />
+    <None Remove="Resources\Certificates\pebble.minica.pem" />
+    <None Remove="Resources\Certificates\peeble.pem" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +38,7 @@
     <EmbeddedResource Include="Resources\Certificates\dst-root-ca-x3.pem" />
     <EmbeddedResource Include="Resources\Certificates\fake-le-root-x1.pem" />
     <EmbeddedResource Include="Resources\Certificates\isrg-root-x1.pem" />
+    <EmbeddedResource Include="Resources\Certificates\peeble.pem" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,9 +50,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" Condition="'$(TargetFramework)' == 'net6.0'" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" Condition="'$(TargetFramework)' == 'net462'" />
+    <PackageReference Include="System.Text.Json" Version="8.0.0-rc.2.23479.6" Condition="'$(TargetFramework)' == 'net8.0'" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" Condition="'$(TargetFramework)' == 'net462'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Crypto\crypto.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿#if !NET8_0_OR_GREATER
+using Newtonsoft.Json;
+#endif
 
 namespace Certes.Jws
 {
@@ -13,7 +15,9 @@ namespace Certes.Jws
         /// <value>
         /// The protected.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("protected")]
+#endif
         public string Protected { get; set; }
 
         /// <summary>
@@ -22,7 +26,9 @@ namespace Certes.Jws
         /// <value>
         /// The payload.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("payload")]
+#endif
         public string Payload { get; set; }
 
         /// <summary>
@@ -31,7 +37,9 @@ namespace Certes.Jws
         /// <value>
         /// The signature.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("signature")]
+#endif
         public string Signature { get; set; }
     }
 

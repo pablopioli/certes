@@ -1,10 +1,8 @@
-﻿using System;
-using System.Text;
-using Certes.Crypto;
+﻿using Certes.Pkcs;
+#if !NET8_0_OR_GREATER
 using Certes.Json;
-using Certes.Pkcs;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Security;
+#endif
 
 namespace Certes.Jws
 {
@@ -63,7 +61,9 @@ namespace Certes.Jws
     /// </summary>
     public static class AccountKeyExtensions
     {
+#if !NET8_0_OR_GREATER
         private static readonly JsonSerializerSettings thumbprintSettings = JsonUtil.CreateSettings();
+#endif
 
         /// <summary>
         /// Generates the thumbprint for the given account <paramref name="key"/>.

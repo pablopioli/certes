@@ -19,7 +19,7 @@ namespace Certes.Acme
     {
         private class MockHttpMessageHandler : HttpMessageHandler
         {
-            private readonly string productVersion = 
+            private readonly string productVersion =
                 typeof(AcmeHttpClient).GetTypeInfo().Assembly.GetName().Version.ToString();
             private readonly JsonSerializerSettings jsonSettings = JsonUtil.CreateSettings();
 
@@ -33,7 +33,8 @@ namespace Certes.Acme
                 foreach (var header in request.Headers.UserAgent)
                 {
                     if (header.Product.Name == "Certes" &&
-                        header.Product.Version == productVersion) {
+                        header.Product.Version == productVersion)
+                    {
                         isCertes = true;
                     }
                 }
@@ -78,7 +79,7 @@ namespace Certes.Acme
                 await Assert.ThrowsAsync<AcmeException>(() => client.ConsumeNonce());
             }
         }
-        
+
         [Fact]
         public async Task RetryOnBadNonce()
         {
@@ -100,7 +101,7 @@ namespace Certes.Acme
                     {
                         Status = AccountStatus.Valid
                     }, null, null));
-            
+
             var key = KeyFactory.NewKey(KeyAlgorithm.RS256);
             var ctx = new AcmeContext(
                 WellKnownServers.LetsEncryptStagingV2,

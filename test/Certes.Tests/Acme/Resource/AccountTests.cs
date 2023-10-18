@@ -1,8 +1,8 @@
-﻿using Certes.Json;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Certes.Json;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Certes.Acme.Resource
@@ -22,6 +22,7 @@ namespace Certes.Acme.Resource
             r.VerifyGetterSetter(a => a.OnlyReturnExisting, true);
         }
 
+#if !NET8_0_OR_GREATER
         [Fact]
         public void CanBeSerialized()
         {
@@ -34,5 +35,6 @@ namespace Certes.Acme.Resource
 
             Assert.Equal(Regex.Replace(srcJson, @"\s", "").Length, Regex.Replace(json, @"\s", "").Length);
         }
+#endif
     }
 }

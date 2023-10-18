@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿#if !NET8_0_OR_GREATER
+using Newtonsoft.Json;
+#endif
 using System;
-using System.Collections.Generic;
 
 namespace Certes.Acme.Resource
 {
@@ -15,7 +16,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The type.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("type")]
+#endif
         public string Type { get; set; }
 
         /// <summary>
@@ -24,7 +27,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The URL.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("url")]
+#endif
         public Uri Url { get; set; }
 
         /// <summary>
@@ -33,7 +38,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The status.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("status")]
+#endif
         public ChallengeStatus? Status { get; set; }
 
         /// <summary>
@@ -42,7 +49,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The validation time.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("validated")]
+#endif
         public DateTimeOffset? Validated { get; set; }
 
         /// <summary>
@@ -52,7 +61,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The errors.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("error")]
+#endif
         public AcmeError Error { get; set; }
 
         /// <summary>
@@ -61,7 +72,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The token.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("token")]
+#endif
         public string Token { get; set; }
     }
 }

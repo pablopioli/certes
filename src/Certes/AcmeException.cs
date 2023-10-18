@@ -42,6 +42,7 @@ namespace Certes
         {
         }
 
+#if !NET8_0_OR_GREATER
         /// <summary>
         /// Initializes a new instance of the <see cref="AcmeException"/> class.
         /// </summary>
@@ -57,5 +58,6 @@ namespace Certes
             : base(info, context)
         {
         }
+#endif
     }
 }

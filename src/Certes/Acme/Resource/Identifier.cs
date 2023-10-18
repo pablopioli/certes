@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿#if !NET8_0_OR_GREATER
+using Newtonsoft.Json;
+#endif
 
 namespace Certes.Acme.Resource
 {
@@ -13,7 +15,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The type.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("type")]
+#endif
         public IdentifierType Type { get; set; }
 
         /// <summary>
@@ -22,7 +26,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The value.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("value")]
+#endif
         public string Value { get; set; }
     }
 }

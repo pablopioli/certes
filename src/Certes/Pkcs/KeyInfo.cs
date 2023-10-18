@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using Certes.Crypto;
 using Certes.Properties;
+#if !NET8_0_OR_GREATER
 using Newtonsoft.Json;
+#endif
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
@@ -19,7 +21,11 @@ namespace Certes.Pkcs
         /// <value>
         /// The private key information.
         /// </value>
+#if NET8_0_OR_GREATER
+        [System.Text.Json.Serialization.JsonPropertyName("der")]
+#else
         [JsonProperty("der")]
+#endif
         public byte[] PrivateKeyInfo { get; set; }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿#if !NET8_0_OR_GREATER
+using Newtonsoft.Json;
+#endif
 using System;
 using System.Collections.Generic;
 
@@ -18,7 +20,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The orders.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("orders")]
+#endif
         public IList<Uri> Orders { get; set; }
     }
 }

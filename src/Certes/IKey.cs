@@ -3,9 +3,11 @@ using System.IO;
 using System.Text;
 using Certes.Acme.Resource;
 using Certes.Crypto;
-using Certes.Json;
 using Certes.Jws;
+#if !NET8_0_OR_GREATER
+using Certes.Json;
 using Newtonsoft.Json;
+#endif
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto.Operators;
@@ -45,7 +47,10 @@ namespace Certes
     {
         private static readonly DerObjectIdentifier acmeValidationV1Id = new DerObjectIdentifier("1.3.6.1.5.5.7.1.31");
         private static readonly KeyAlgorithmProvider signatureAlgorithmProvider = new KeyAlgorithmProvider();
+
+#if !NET8_0_OR_GREATER
         private static readonly JsonSerializerSettings thumbprintSettings = JsonUtil.CreateSettings();
+#endif
 
         /// <summary>
         /// Generates the thumbprint for the given account <paramref name="key"/>.
@@ -55,7 +60,12 @@ namespace Certes
         internal static byte[] GenerateThumbprint(this IKey key)
         {
             var jwk = key.JsonWebKey;
+
+#if NET8_0_OR_GREATER
+            var json = System.Text.Json.JsonSerializer.Serialize(jwk, jwk.GetType(), CertesJsonSerializerContext.Default);
+#else
             var json = JsonConvert.SerializeObject(jwk, Formatting.None, thumbprintSettings);
+#endif
             var bytes = Encoding.UTF8.GetBytes(json);
             var hashed = DigestUtilities.CalculateDigest("SHA256", bytes);
 

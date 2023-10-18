@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Certes.Acme;
+#if !NET8_0_OR_GREATER
 using Certes.Json;
 using Newtonsoft.Json;
+#endif
 
 namespace Certes
 {
@@ -13,10 +15,12 @@ namespace Certes
     [Serializable]
     public class AcmeRequestException : AcmeException
     {
+#if !NET8_0_OR_GREATER
         /// <summary>
         /// The json serializer settings for converting additional information.
         /// </summary>
         private static readonly JsonSerializerSettings jsonSerializerSettings = JsonUtil.CreateSettings();
+#endif        
 
         /// <summary>
         /// Gets the error occurred while processing ACME operations.
@@ -69,6 +73,7 @@ namespace Certes
         {
         }
 
+#if !NET8_0_OR_GREATER
         /// <summary>
         /// Initializes a new instance of the <see cref="AcmeRequestException"/> class.
         /// </summary>
@@ -115,6 +120,7 @@ namespace Certes
                 info.AddValue("acme.error", JsonConvert.SerializeObject(Error, jsonSerializerSettings));
             }
         }
+#endif
 
         /// <summary>
         /// Gets a message that describes the current exception.

@@ -43,8 +43,8 @@ namespace Certes
 
             var servers = new[] {
                 //new Uri("https://lo0.in:4431/directory"),
-                //new Uri("http://localhost:8080/dir"),
-                new Uri("https://pebble.azurewebsites.net/dir"),
+                new Uri("https://localhost:14000/dir"),
+                // new Uri("https://pebble.azurewebsites.net/dir"),
                 //WellKnownServers.LetsEncryptStagingV2,
             };
 

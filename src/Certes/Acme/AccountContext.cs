@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Certes.Acme.Resource;
+#if !NET8_0_OR_GREATER
 using Certes.Json;
+#endif
 using Certes.Jws;
 
 namespace Certes.Acme
@@ -90,9 +92,32 @@ namespace Certes.Acme
         {
             var endpoint = await context.GetResourceUri(d => d.NewAccount);
             var jws = new JwsSigner(context.AccountKey);
-            
+
             if (eabKeyId != null && eabKey != null)
             {
+#if NET8_0_OR_GREATER
+                var serializableHeader = new SerializableObjects.Header
+                {
+                    Alg = eabKeyAlg?.ToUpper() ?? "HS256",
+                    Kid = eabKeyId,
+                    Url = endpoint
+                };
+
+                var header = new
+                {
+                    alg = serializableHeader.Alg,
+                    kid = serializableHeader.Kid,
+                    url = serializableHeader.Url,
+                };
+
+                var headerJson = System.Text.Json.JsonSerializer.Serialize(serializableHeader, CertesJsonSerializerContext.Default.Header);
+                var protectedHeaderBase64 = JwsConvert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(headerJson));
+                var accountKeyBase64 = JwsConvert.ToBase64String(
+                    System.Text.Encoding.UTF8.GetBytes(
+                        System.Text.Json.JsonSerializer.Serialize(context.AccountKey.JsonWebKey, CertesJsonSerializerContext.Default.JsonWebKey)
+                        )
+                    );
+#else
                 var header = new
                 {
                     alg = eabKeyAlg?.ToUpper() ?? "HS256",
@@ -102,12 +127,12 @@ namespace Certes.Acme
 
                 var headerJson = Newtonsoft.Json.JsonConvert.SerializeObject(header, Newtonsoft.Json.Formatting.None, JsonUtil.CreateSettings());
                 var protectedHeaderBase64 = JwsConvert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(headerJson));
-
                 var accountKeyBase64 = JwsConvert.ToBase64String(
                     System.Text.Encoding.UTF8.GetBytes(
                         Newtonsoft.Json.JsonConvert.SerializeObject(context.AccountKey.JsonWebKey, Newtonsoft.Json.Formatting.None)
                         )
                     );
+#endif
 
                 var signingBytes = System.Text.Encoding.ASCII.GetBytes($"{protectedHeaderBase64}.{accountKeyBase64}");
 
@@ -117,16 +142,16 @@ namespace Certes.Acme
                 switch (header.alg)
                 {
                     case "HS512":
-                        using(var hs512 = new HMACSHA512(JwsConvert.FromBase64String(eabKey))) signatureHash = hs512.ComputeHash(signingBytes);
+                        using (var hs512 = new HMACSHA512(JwsConvert.FromBase64String(eabKey))) signatureHash = hs512.ComputeHash(signingBytes);
                         break;
                     case "HS384":
                         using (var hs384 = new HMACSHA384(JwsConvert.FromBase64String(eabKey))) signatureHash = hs384.ComputeHash(signingBytes);
                         break;
                     default:
                         using (var hs256 = new HMACSHA256(JwsConvert.FromBase64String(eabKey))) signatureHash = hs256.ComputeHash(signingBytes);
-                        break;   
+                        break;
                 }
-                    
+
                 var signatureBase64 = JwsConvert.ToBase64String(signatureHash);
 
                 body.ExternalAccountBinding = new

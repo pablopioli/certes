@@ -1,5 +1,7 @@
 ﻿using System;
+#if !NET8_0_OR_GREATER
 using Newtonsoft.Json;
+#endif
 
 namespace Certes.Acme.Resource
 {
@@ -14,7 +16,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The new nonce endpoint.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("newNonce")]
+#endif
         public Uri NewNonce { get; }
 
         /// <summary>
@@ -23,7 +27,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The new account endpoint.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("newAccount")]
+#endif
         public Uri NewAccount { get; }
 
         /// <summary>
@@ -32,7 +38,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The new order endpoint.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("newOrder")]
+#endif
         public Uri NewOrder { get; }
 
         /// <summary>
@@ -41,7 +49,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The revoke cert.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("revokeCert")]
+#endif
         public Uri RevokeCert { get; }
 
         /// <summary>
@@ -50,7 +60,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The key change endpoint.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("keyChange")]
+#endif
         public Uri KeyChange { get; }
 
         /// <summary>
@@ -59,7 +71,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The metadata.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("meta")]
+#endif
         public DirectoryMeta Meta { get; }
 
         /// <summary>
@@ -75,7 +89,7 @@ namespace Certes.Acme.Resource
             Uri newNonce,
             Uri newAccount,
             Uri newOrder,
-            Uri revokeCert, 
+            Uri revokeCert,
             Uri keyChange,
             DirectoryMeta meta)
         {

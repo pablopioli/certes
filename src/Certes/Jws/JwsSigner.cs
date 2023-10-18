@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Text;
+using Certes.Acme;
+#if !NET8_0_OR_GREATER
 using Certes.Json;
 using Newtonsoft.Json;
+#endif
 
 namespace Certes.Jws
 {
@@ -44,7 +47,6 @@ namespace Certes.Jws
             Uri url = null,
             string nonce = null)
         {
-            var jsonSettings = JsonUtil.CreateSettings();
             var protectedHeader = (keyId) == null ?
                 (object)new
                 {
@@ -61,11 +63,63 @@ namespace Certes.Jws
                     url,
                 };
 
+#if NET8_0_OR_GREATER
+            var entityJson = payload == null ?
+               "" :
+               System.Text.Json.JsonSerializer.Serialize(payload, payload.GetType(), CertesJsonSerializerContext.Default);
+
+            string protectedHeaderJson;
+            if (keyId == null)
+            {
+                var jwk = keyPair.JsonWebKey;
+                if (jwk is EcJsonWebKey)
+                {
+                    var serializableObject = new SerializableObjects.ProtectedHeaderEC
+                    {
+                        Alg = keyPair.Algorithm.ToJwsAlgorithm(),
+                        Jwk = keyPair.JsonWebKey as EcJsonWebKey,
+                        Nonce = nonce,
+                        Url = url
+                    };
+
+                    protectedHeaderJson = System.Text.Json.JsonSerializer.Serialize(serializableObject, serializableObject.GetType(), CertesJsonSerializerContext.Default);
+                }
+                else if (jwk is RsaJsonWebKey)
+                {
+                    var serializableObject = new SerializableObjects.ProtectedHeaderRsa
+                    {
+                        Alg = keyPair.Algorithm.ToJwsAlgorithm(),
+                        Jwk = keyPair.JsonWebKey as RsaJsonWebKey,
+                        Nonce = nonce,
+                        Url = url
+                    };
+
+                    protectedHeaderJson = System.Text.Json.JsonSerializer.Serialize(serializableObject, serializableObject.GetType(), CertesJsonSerializerContext.Default);
+                }
+                else
+                {
+                    throw new Exception("JsonWebKey is not serializable");
+                }
+            }
+            else
+            {
+                var serializableObject = new SerializableObjects.ProtectedHeader
+                {
+                    Alg = keyPair.Algorithm.ToJwsAlgorithm(),
+                    Kid = keyId,
+                    Nonce = nonce,
+                    Url = url
+                };
+
+                protectedHeaderJson = System.Text.Json.JsonSerializer.Serialize(serializableObject, serializableObject.GetType(), CertesJsonSerializerContext.Default);
+            }
+#else
+            var jsonSettings = JsonUtil.CreateSettings();
             var entityJson = payload == null ?
                 "" :
-                JsonConvert.SerializeObject(payload, Formatting.None, jsonSettings);
-            var protectedHeaderJson = JsonConvert.SerializeObject(protectedHeader, Formatting.None, jsonSettings);
-
+                JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.None, jsonSettings);
+            var protectedHeaderJson = JsonConvert.SerializeObject(protectedHeader, Newtonsoft.Json.Formatting.None, jsonSettings);
+#endif
             var payloadEncoded = JwsConvert.ToBase64String(Encoding.UTF8.GetBytes(entityJson));
             var protectedHeaderEncoded = JwsConvert.ToBase64String(Encoding.UTF8.GetBytes(protectedHeaderJson));
 

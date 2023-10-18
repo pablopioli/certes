@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿#if !NET8_0_OR_GREATER
+using Newtonsoft.Json;
+#endif
 
 namespace Certes.Acme.Resource
 {
@@ -13,7 +15,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The certificate to be revoked, in the base64url-encoded version of the DER format.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("certificate")]
+#endif
         public string Certificate { get; set; }
 
 
@@ -23,7 +27,9 @@ namespace Certes.Acme.Resource
         /// <value>
         /// The revocation reason.
         /// </value>
+#if !NET8_0_OR_GREATER
         [JsonProperty("reason")]
+#endif
         public RevocationReason? Reason { get; set; }
     }
 }
