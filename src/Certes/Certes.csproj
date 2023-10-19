@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -55,10 +56,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" Condition="'$(TargetFramework)' == 'net462'" />
     <PackageReference Include="System.Text.Json" Version="8.0.0-rc.2.23479.6" Condition="'$(TargetFramework)' == 'net8.0'" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" Condition="'$(TargetFramework)' == 'net462'" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Crypto\crypto.csproj" />
   </ItemGroup>
 
   <ItemGroup>
