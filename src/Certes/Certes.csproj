@@ -18,7 +18,7 @@
     <PackageIcon>logo.png</PackageIcon>
     <IsTrimmable>true</IsTrimmable>
     <PackageId>PPioli.Certes.AOT</PackageId>
-    <Version>4.0.0-preview1</Version>
+    <Version>4.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,8 +45,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.0-rc.2.24473.5" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.1" />
+    <PackageReference Include="System.Text.Json" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
