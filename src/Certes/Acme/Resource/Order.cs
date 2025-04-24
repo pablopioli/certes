@@ -135,5 +135,14 @@ namespace Certes.Acme.Resource
             internal string Csr { get; set; }
 #endif
         }
+
+        /// <summary>
+        /// Represents the profile to use when issuing the certificate.
+        /// See https://letsencrypt.org/2025/01/09/acme-profiles/
+        /// </summary>
+#if NET8_0_OR_GREATER
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+#endif
+        public string Profile { get; set; } = null;
     }
 }
